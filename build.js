@@ -7,7 +7,7 @@ const regenerate = require('regenerate');
 
 // PCENChar ::=
 //   "-" | "." | [0-9] | "_" | [a-z] | #xB7 | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x203F-#x2040] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
-const PCENChar = regenerate('-', '.', '_', 0x00B7)
+const PCENCharRegenerate = regenerate('-', '.', '_', 0x00B7)
 	.addRange('0', '9')
 	.addRange('a', 'z')
 	.addRange(0x00C0, 0x00D6)
@@ -21,12 +21,14 @@ const PCENChar = regenerate('-', '.', '_', 0x00B7)
 	.addRange(0x3001, 0xD7FF)
 	.addRange(0xF900, 0xFDCF)
 	.addRange(0xFDF0, 0xFFFD)
-	.addRange(0x010000, 0x0EFFFF)
-	.toString();
+	.addRange(0x010000, 0x0EFFFF);
+const PCENChar = PCENCharRegenerate.toString();
+const PCENCharNoHyphen = PCENCharRegenerate.clone().remove('-').toString();
 
 // PotentialCustomElementName ::=
 //   [a-z] (PCENChar)* '-' (PCENChar)*
-const PotentialCustomElementName = `[a-z](?:${ PCENChar })*-(?:${ PCENChar })*`;
+// Note: The hyphen is omitted from the first group to avoid excess backtracking.
+const PotentialCustomElementName = `[a-z](?:${ PCENCharNoHyphen })*-(?:${ PCENChar })*`;
 const source = `// Generated using \`npm run build\`. Do not edit.
 
 var regex = /^${ PotentialCustomElementName }$/;

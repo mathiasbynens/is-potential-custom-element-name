@@ -1,6 +1,6 @@
 {
   "name": "is-potential-custom-element-name",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Check whether a given string matches the `PotentialCustomElementName` production as defined in the HTML Standard.",
   "homepage": "https://github.com/mathiasbynens/is-potential-custom-element-name",
   "main": "index.js",
